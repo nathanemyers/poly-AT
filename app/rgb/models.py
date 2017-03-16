@@ -3,11 +3,15 @@ from __future__ import unicode_literals
 from django.db import models
 
 
-def add_colors(color1, color2):
+def sum_colors(color_array):
+    length = len(color_array)
+    r = reduce(lambda a, b: a.r + b.r, color_array)
+    g = reduce(lambda a, b: a.g + b.g, color_array)
+    b = reduce(lambda a, b: a.b + b.b, color_array)
     return RGB(
-        r=(color1.r + color2.r) / 2,
-        g=(color1.g + color2.g) / 2,
-        b=(color1.b + color2.b) / 2
+        r=r / length,
+        g=g / length,
+        b=b / length
     )
 
 

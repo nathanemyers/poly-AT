@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.files import File
 
-from app.photo.models import Photo, add_colors
+from app.photo.models import Photo
 from app.rgb.models import RGB
 
 
@@ -20,6 +20,8 @@ class PhotoTests(TestCase):
     def test_color_sumnation(self):
         self.assertEqual(self.photo.sum_color, RGB())
 
-    def test_add_colors(self):
-
-
+    def test_color_sum(self):
+        result = self.photo.caluculate_color_sum()
+        self.assertEqual(result.r, 0)
+        self.assertEqual(result.g, 0)
+        self.assertEqual(result.b, 0)

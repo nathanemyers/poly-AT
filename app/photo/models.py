@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 
-from app.rgb.models import RGB
+from app.rgb.models import RGB, sum_colors
 
 
 class Photo(models.Model):
@@ -17,4 +17,6 @@ class Photo(models.Model):
             return RGB()
 
         pixels = list(self.image.getdata())
+        rgb_pixels = map(lambda x: RGB.create(x), pixels)
+        return sum_colors(rgb_pixels)
 
