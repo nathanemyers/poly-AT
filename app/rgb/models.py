@@ -3,6 +3,10 @@ from __future__ import unicode_literals
 from django.db import models
 
 
+def add_colors(color1, color2):
+    pass
+
+
 class RGB(models.Model):
     r = models.IntegerField(default=0)
     g = models.IntegerField(default=0)

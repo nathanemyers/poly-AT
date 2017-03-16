@@ -11,3 +11,10 @@ class Photo(models.Model):
     height = models.IntegerField()
     width = models.IntegerField()
     rgb = models.ForeignKey(RGB, blank=True, null=True)
+
+    def caluculate_color_sum(self):
+        if (self.image is None):
+            return RGB()
+
+        pixels = list(self.image.getdata())
+
