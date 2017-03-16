@@ -4,7 +4,11 @@ from django.db import models
 
 
 def add_colors(color1, color2):
-    pass
+    return RGB(
+        r=(color1.r + color2.r) / 2,
+        g=(color1.g + color2.g) / 2,
+        b=(color1.b + color2.b) / 2
+    )
 
 
 class RGB(models.Model):
