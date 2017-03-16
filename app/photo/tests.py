@@ -2,7 +2,6 @@ from django.test import TestCase
 from django.core.files import File
 
 from app.photo.models import Photo
-from app.rgb.models import RGB
 
 
 class PhotoTests(TestCase):
@@ -16,9 +15,6 @@ class PhotoTests(TestCase):
 
     def test_width(self):
         self.assertEqual(self.photo.width, 3264)
-
-    def test_color_sumnation(self):
-        self.assertEqual(self.photo.sum_color, RGB())
 
     def test_color_sum(self):
         result = self.photo.caluculate_color_sum()
