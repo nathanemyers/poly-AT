@@ -17,9 +17,10 @@ class Photo(models.Model):
         if (self.image is None):
             return RGB()
 
+        image_file = self.image.file
         # import pdb;pdb.set_trace()
-        with self.image.file.read() as f:
-            pillow = Image.open(f)
+        pillow = Image.open(image_file.name)
+
         pixels = list(pillow.getdata())
         rgb_pixels = map(lambda x: RGB.create(x), pixels)
         return sum_colors(rgb_pixels)

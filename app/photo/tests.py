@@ -1,3 +1,4 @@
+import os
 from django.test import TestCase
 from django.core.files import File
 
@@ -6,9 +7,13 @@ from app.photo.models import Photo
 
 class PhotoTests(TestCase):
     def setUp(self):
-        test_image = File(open('static/test/woods.jpg'))
+        test_image_path = 'static/test/woods.jpg'
         self.photo = Photo()
-        self.photo.image.save('test_image', test_image)
+        self.photo.image.save(
+            os.path.basename(test_image_path),
+            File(open(test_image_path))
+        )
+        self.photo.save()
 
     def test_height(self):
         self.assertEqual(self.photo.height, 2448)
