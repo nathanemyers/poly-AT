@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.core.files import File
 
 from app.photo.models import Photo, calculate_color_sum
+from numpy.testing import assert_array_equal
 
 
 class PhotoTests(TestCase):
@@ -23,8 +24,8 @@ class PhotoTests(TestCase):
 
     def test_color_sum(self):
         result = calculate_color_sum(self.photo.to_array())
-        self.assertEqual(result.r, 58.981953054914875)
+        assert_array_equal(result, [58.98195305, 79.94297103, 59.86156091])
 
     def test_pixelize(self):
-        result = self.photo.pixelize(10, 10)
+        self.photo.pixelize(30, 30)
 
