@@ -1,5 +1,12 @@
 from django.shortcuts import render
 
-# Create your views here.
+from app.photo.models import Photo
+
+
 def index(request):
-    return render(request, 'index.html')
+    test = Photo.objects.first()
+    context = {
+        "pixels": test.pixelize()
+    }
+
+    return render(request, 'index.html', context=context)

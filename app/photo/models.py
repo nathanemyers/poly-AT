@@ -1,6 +1,9 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+
 from PIL import Image
 import numpy as np
 
@@ -17,8 +20,8 @@ def calculate_color_sum(arr):
 class Photo(models.Model):
     name = models.CharField(max_length=255)
     image = models.ImageField(height_field="height", width_field="width", upload_to="static/tmp")
-    height = models.IntegerField()
-    width = models.IntegerField()
+    height = models.IntegerField(blank=True, null=True)
+    width = models.IntegerField(blank=True, null=True)
     rgb = models.ForeignKey(RGB, blank=True, null=True)
 
     def to_array(self):
@@ -38,18 +41,23 @@ class Photo(models.Model):
         arr = self.to_array()
         blocked_array = blockwise_view(arr, blockshape=(width, height, 3), require_aligned_blocks=False)
         x, y, z, a, b, c, = blocked_array.shape
-        # import pdb;pdb.set_trace()
         summed_color = np.zeros((x, y, 3), dtype=float, order='C')
 
         for index in np.ndindex(x, y):
             block = blocked_array[index][0]
-            # print 'block:'
-            # print block.shape
-            # print block
             color_sum = calculate_color_sum(block)
-            # print 'summed color:'
-            # print color_sum.shape
-            # print color_sum
             summed_color[index] = color_sum
 
         return summed_color
+
+
+#  this is def gonna loop forever and ever and ever and ever and ever
+@receiver(post_save, sender=Photo)
+def metadata(sender, instance, created, **kwargs):
+        color_sum = calculate_color_sum(instance.to_array())
+        instance.rgb = RGB(
+            r=color_sum[0],
+            g=color_sum[1],
+            b=color_sum[2],
+        )
+        instance.save()
