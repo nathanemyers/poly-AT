@@ -1,10 +1,10 @@
 import os
 import numpy as np
+from numpy.testing import assert_array_almost_equal
 from django.test import TestCase
 from django.core.files import File
 
 from app.photo.models import Photo, calculate_color_sum
-from numpy.testing import assert_array_almost_equal
 
 
 class PhotoTests(TestCase):
@@ -28,5 +28,5 @@ class PhotoTests(TestCase):
         assert_array_almost_equal(result, np.array([58.98195305, 79.94297103, 59.86156091]))
 
     def test_pixelize(self):
-        self.photo.pixelize(30, 30)
+        result = self.photo.pixelize(1000, 1000)
 

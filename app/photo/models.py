@@ -36,14 +36,20 @@ class Photo(models.Model):
             return []
 
         arr = self.to_array()
-        blocked_array = blockwise_view(arr, blockshape=(30, 30, 3), require_aligned_blocks=False)
+        blocked_array = blockwise_view(arr, blockshape=(width, height, 3), require_aligned_blocks=False)
         x, y, z, a, b, c, = blocked_array.shape
         # import pdb;pdb.set_trace()
         summed_color = np.zeros((x, y, 3), dtype=float, order='C')
-        for x_axis in blocked_array:
-            for y_axis in x_axis:
-                np.append(summed_color, calculate_color_sum(y_axis[0]))
-        print summed_color
-        print summed_color.shape
-        return arr
 
+        for index in np.ndindex(x, y):
+            block = blocked_array[index][0]
+            # print 'block:'
+            # print block.shape
+            # print block
+            color_sum = calculate_color_sum(block)
+            # print 'summed color:'
+            # print color_sum.shape
+            # print color_sum
+            summed_color[index] = color_sum
+
+        return summed_color
