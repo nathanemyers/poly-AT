@@ -2,8 +2,9 @@ from __future__ import unicode_literals
 
 from django.db import models
 from PIL import Image
+import numpy as np
 
-from app.rgb.models import RGB, sum_colors
+from app.rgb.models import RGB
 
 
 class Photo(models.Model):
@@ -18,10 +19,10 @@ class Photo(models.Model):
             return RGB()
 
         image_file = self.image.file
-        # import pdb;pdb.set_trace()
         pillow = Image.open(image_file.name)
+        arr = np.asarray(pillow)
+        mean = arr.mean(0).mean(0)
 
-        pixels = list(pillow.getdata())
-        rgb_pixels = map(lambda x: RGB.create(x), pixels)
-        return sum_colors(rgb_pixels)
+        return RGB(r=mean[0], g=mean[1], b=mean[2])
+
 

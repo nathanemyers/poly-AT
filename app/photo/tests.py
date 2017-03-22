@@ -23,6 +23,4 @@ class PhotoTests(TestCase):
 
     def test_color_sum(self):
         result = self.photo.caluculate_color_sum()
-        self.assertEqual(result.r, 0)
-        self.assertEqual(result.g, 0)
-        self.assertEqual(result.b, 0)
+        self.assertEqual(result.r, 58.981953054914875)
