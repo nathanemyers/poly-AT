@@ -25,8 +25,10 @@ class RGB(models.Model):
 
     @classmethod
     def create(cls, rgb_tuple):
-        return cls(
+        RGB = cls(
             r=rgb_tuple[0],
             g=rgb_tuple[1],
             b=rgb_tuple[2],
         )
+        RGB.save()
+        return RGB

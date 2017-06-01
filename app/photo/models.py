@@ -1,8 +1,6 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.dispatch import receiver
-from django.db.models.signals import post_save
 
 from PIL import Image
 import numpy as np
@@ -39,7 +37,11 @@ class Photo(models.Model):
             return []
 
         arr = self.to_array()
-        blocked_array = blockwise_view(arr, blockshape=(width, height, 3), require_aligned_blocks=False)
+        blocked_array = blockwise_view(
+            arr,
+            blockshape=(width, height, 3),
+            require_aligned_blocks=False
+        )
         x, y, z, a, b, c, = blocked_array.shape
         summed_color = np.zeros((x, y, 3), dtype=float, order='C')
 
@@ -50,14 +52,11 @@ class Photo(models.Model):
 
         return summed_color
 
-
-#  this is def gonna loop forever and ever and ever and ever and ever
-@receiver(post_save, sender=Photo)
-def metadata(sender, instance, created, **kwargs):
-        color_sum = calculate_color_sum(instance.to_array())
-        instance.rgb = RGB(
+    def save(self, *args, **kwargs):
+        color_sum = calculate_color_sum(self.to_array())
+        self.rgb = RGB(
             r=color_sum[0],
             g=color_sum[1],
             b=color_sum[2],
-        )
-        instance.save()
+        ).save()
+        super(Photo, self).save(*args, **kwargs)
